@@ -13,8 +13,10 @@ let cam;
 const EYE_HEIGHT = -45;
 const LOOK_DISTANCE = 100;
 const WORLDSCALE = 2;
+let fpv = false;
 let stonewall;
 let tile;
+let angle = 0;
 let grid = [
     [2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 3],
     [0, 1, 1, 0, 5, 0, 5, 0, 1, 1, 5, 1, 1, 0, 1, 0, 0, 0, 0, 3],
@@ -115,6 +117,8 @@ function wall() {
                 translate(0, -25, -50)
                 texture(stonewall);
                 box(100, 50, 5);
+
+
             }
             if (grid[z][x] == 3) {
                 push();
@@ -122,6 +126,7 @@ function wall() {
                 texture(stonewall);
                 box(5, 50, 100)
                 pop();
+
             }
             if (grid[z][x] == 4) {
                 push();
@@ -130,6 +135,7 @@ function wall() {
                 texture(stonewall);
                 box(5, 50, 100)
                 pop();
+
             }
             if (grid[z][x] == 5) {
                 texture(tile);
@@ -143,9 +149,14 @@ function wall() {
                 texture(stonewall);
                 box(100, 50, 5)
             }
+
             pop();
         }
+
+
+
     }
+
 }
 
 function movePlayer3(t, dt) {
@@ -172,6 +183,10 @@ function movePlayer3(t, dt) {
     if (keyIsDown(LEFT_ARROW)) {
         ot -= 2
     }
+
+
+
+
     console.log("position", position.x, position.z);
     let gridX = Math.floor((position.x + 75) / 150);
     let gridZ = Math.floor((position.z + 75) / 150);
@@ -228,13 +243,23 @@ function movePlayer3(t, dt) {
             velocity = vector(0, 0, 0);
         }
     }
+
+    // if (fpv) {
     cam.setPosition(
         position.x * WORLDSCALE,
         EYE_HEIGHT * WORLDSCALE,
         position.z * WORLDSCALE
     );
+
+
+    // cam.setPosition(position.x, (-Math.sin(3 * t) * 6) - 60, position.z); cam.lookAt(position.x + forward.x,);
     cam.lookAt((position.x + forward.x * LOOK_DISTANCE) * WORLDSCALE, EYE_HEIGHT * WORLDSCALE, (position.z + forward.z * LOOK_DISTANCE) * WORLDSCALE);
 }
+
+//}
+
+
+
 function movePlayer2(t, dt) {
     if (keyIsDown(LEFT_ARROW)) {
         velocity.x -= 3;
@@ -333,6 +358,7 @@ function movePlayer2(t, dt) {
         }
     }
 }
+
 function drawPlayer() {
     push();
     fill('yellow');
@@ -370,3 +396,4 @@ function end() {
     line(185, 0, 25, 185, 0, 75);
     pop();
 }
+
