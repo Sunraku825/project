@@ -45,12 +45,8 @@ let grid = [
 
 
 export function preload() {
-    let w = new URL(import.meta.url).pathname;
-    w = w.substring(0, w.lastIndexOf("/") + 1);
-    stonewall = loadImage(w + "pixilwall.jpg");
-    let f = new URL(import.meta.url).pathname;
-    f = f.substring(0, f.lastIndexOf("/") + 1);
-    tile = loadImage(f + "floor.png");
+    stonewall = loadImage("public/pixilwall.jpg");
+    tile = loadImage("public/floor.png");
 }
 
 export function setup() {
