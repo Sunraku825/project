@@ -1,7 +1,10 @@
 import { drawGrid } from "@/utils/grid.js";
 import { drawAxes } from '@/utils/axes.js';
 import { vector } from "@/utils/vec3.js";
-
+/*To do list 
+-make the mouse work
+-fix my collisions so im not cliping and maybe not as much looking through walls
+*/
 // Variables 
 const length = 20;
 const width = 20;
@@ -19,15 +22,15 @@ let tile;
 let angle = 0;
 let grid = [
     [2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 3],
-    [0, 1, 1, 0, 5, 0, 5, 0, 1, 1, 5, 1, 1, 0, 1, 0, 0, 0, 0, 3],
-    [0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 2, 5, 3],
+    [0, 2, 1, 5, 5, 0, 5, 0, 1, 1, 5, 1, 1, 0, 1, 0, 0, 0, 0, 3],
+    [0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 2, 5, 3],
     [0, 1, 0, 2, 1, 0, 1, 1, 0, 0, 1, 5, 0, 1, 5, 0, 5, 0, 1, 3],
     [2, 5, 0, 1, 5, 1, 1, 2, 5, 2, 1, 1, 5, 0, 0, 1, 1, 0, 0, 3],
     [0, 0, 0, 2, 1, 2, 1, 1, 0, 2, 1, 1, 1, 0, 1, 0, 0, 1, 0, 3],
     [0, 0, 1, 2, 5, 1, 5, 1, 5, 0, 0, 2, 5, 1, 1, 2, 1, 5, 1, 3],
     [0, 2, 1, 0, 0, 0, 1, 0, 0, 5, 0, 1, 0, 0, 0, 1, 1, 0, 0, 3],
     [0, 0, 1, 0, 2, 1, 1, 0, 1, 0, 1, 1, 2, 5, 0, 2, 5, 2, 5, 3],
-    [0, 1, 0, 1, 0, 2, 0, 0, 0, 0, 2, 0, 1, 1, 0, 1, 1, 0, 2, 3],
+    [0, 1, 0, 1, 0, 2, 0, 5, 0, 0, 2, 0, 1, 1, 0, 1, 1, 0, 2, 3],
     [2, 0, 0, 1, 0, 0, 2, 1, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 5, 3],
     [0, 5, 1, 0, 2, 5, 0, 0, 0, 0, 0, 0, 5, 0, 2, 0, 0, 1, 0, 3],
     [0, 0, 0, 0, 0, 1, 5, 0, 5, 0, 0, 1, 1, 2, 5, 0, 0, 0, 0, 3],
@@ -53,24 +56,22 @@ export function preload() {
 export function setup() {
     angleMode(DEGREES);
     cam = createCamera();
-    window.mouseclicked = function () {
-        requestPointerLock();
-    }
 }
 export function draw(t, dt) {
     scale(2);
-    background(30, 30, 30);
+    background(0);
     if (!fpv) {
         orbitControl();
     }
-    ambientLight(80, 80, 80);
-    directionalLight(255, 255, 255, 1, 1, -1);
+    ambientLight(15);
+    //directionalLight(255, 255, 255, 1, 1, -1);
     drawGrid();
     drawAxes();
     stroke(0);
     strokeWeight(1);
     movePlayer3(t, dt);
-    //pointLight(255, 255, 255, position.x, position.y, position.z);
+    lightFalloff(1, 0.00, 0.000004);
+    pointLight(250, 100, 0, position.x * WORLDSCALE, position.y * WORLDSCALE, position.z * WORLDSCALE + 20);
     drawPlayer();
     wall();
     push();
@@ -97,14 +98,14 @@ function wall() {
                 box(100, 5, 100);
                 translate(-50, -25, 0)
                 texture(stonewall);
-                box(5, 50, 100)
+                box(5, 75, 100)
             }
             if (grid[z][x] == 1) {
                 texture(tile);
                 box(100, 5, 100);
                 translate(0, -25, -50)
                 texture(stonewall);
-                box(100, 50, 5)
+                box(100, 75, 5)
             }
             if (grid[z][x] == 2) {
                 texture(tile);
@@ -112,11 +113,11 @@ function wall() {
                 push();
                 translate(-50, -25, 0)
                 texture(stonewall);
-                box(5, 50, 100)
+                box(5, 75, 100)
                 pop();
                 translate(0, -25, -50)
                 texture(stonewall);
-                box(100, 50, 5);
+                box(100, 75, 5);
 
 
             }
@@ -124,7 +125,7 @@ function wall() {
                 push();
                 translate(-50, -25, 0)
                 texture(stonewall);
-                box(5, 50, 100)
+                box(5, 75, 100)
                 pop();
 
             }
@@ -133,7 +134,7 @@ function wall() {
                 translate(0, -25, -50)
                 rotateY(90);
                 texture(stonewall);
-                box(5, 50, 100)
+                box(5, 75, 100)
                 pop();
 
             }
@@ -147,7 +148,7 @@ function wall() {
                 translate(-50, -25, 0)
                 rotateY(90);
                 texture(stonewall);
-                box(100, 50, 5)
+                box(100, 75, 5)
             }
 
             pop();
@@ -396,4 +397,6 @@ function end() {
     line(185, 0, 25, 185, 0, 75);
     pop();
 }
+
+
 
