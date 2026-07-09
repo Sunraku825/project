@@ -45,8 +45,8 @@ let grid = [
 
 
 export function preload() {
-    stonewall = loadImage("public/pixilwall.jpg");
-    tile = loadImage("public/floor.png");
+    stonewall = loadImage("pixilwall.jpg");
+    tile = loadImage("fldoor.png");
 }
 
 export function setup() {
